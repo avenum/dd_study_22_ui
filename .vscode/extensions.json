@@ -1,0 +1,13 @@
+{
+	"recommendations": [
+		"dracula-theme.theme-dracula",
+        "dart-code.dart-code",
+        "dart-code.flutter",
+        "quicktype.quicktype",
+        "humao.rest-client",
+        "vscode-icons-team.vscode-icons",
+        "nash.awesome-flutter-snippets",
+        "dotup.dart-data-class-generator",
+        "maptz.regionfolder"
+	]
+}

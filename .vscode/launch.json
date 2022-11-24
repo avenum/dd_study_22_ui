@@ -1,0 +1,11 @@
+{
+	"configurations": [
+		{
+			"name": "debug",
+			"request": "launch",
+			"type": "dart",
+			"flutterMode": "debug",
+			
+		}
+	]
+}
