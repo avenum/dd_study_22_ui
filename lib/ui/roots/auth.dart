@@ -1,4 +1,4 @@
-import 'package:dd_study_22_ui/data/auth_service.dart';
+import 'package:dd_study_22_ui/data/services/auth_service.dart';
 import 'package:dd_study_22_ui/ui/app_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,21 +7,25 @@ class _ViewModelState {
   final String? login;
   final String? password;
   final bool isLoading;
+  final String? errorText;
   const _ViewModelState({
     this.login,
     this.password,
     this.isLoading = false,
+    this.errorText,
   });
 
   _ViewModelState copyWith({
     String? login,
     String? password,
     bool? isLoading = false,
+    String? errorText,
   }) {
     return _ViewModelState(
       login: login ?? this.login,
       password: password ?? this.password,
       isLoading: isLoading ?? this.isLoading,
+      errorText: errorText ?? this.errorText,
     );
   }
 }
@@ -55,12 +59,17 @@ class _ViewModel extends ChangeNotifier {
 
   void login() async {
     state = state.copyWith(isLoading: true);
-    await Future.delayed(Duration(seconds: 2))
+    await Future.delayed(const Duration(seconds: 2))
         .then((value) => {state = state.copyWith(isLoading: false)});
-
-    await _authService
-        .auth(state.login, state.password)
-        .then((value) => AppNavigator.toLoader());
+    try {
+      await _authService
+          .auth(state.login, state.password)
+          .then((value) => AppNavigator.toLoader());
+    } on NoNetworkException {
+      state = state.copyWith(errorText: "нет сети");
+    } on WrongCredentionalExceprion {
+      state = state.copyWith(errorText: "не правильный логин или пароль");
+    }
   }
 }
 
@@ -74,26 +83,29 @@ class Auth extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Center(
-            child: Container(
-                child: Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextField(
                   controller: viewModel.loginTec,
-                  decoration: InputDecoration(hintText: "Enter Login"),
+                  decoration: const InputDecoration(hintText: "Enter Login"),
                 ),
                 TextField(
                     controller: viewModel.passwTec,
                     obscureText: true,
-                    decoration: InputDecoration(hintText: "Enter Password")),
+                    decoration:
+                        const InputDecoration(hintText: "Enter Password")),
                 ElevatedButton(
                     onPressed: viewModel.checkFields() ? viewModel.login : null,
-                    child: Text("Login")),
-                if (viewModel.state.isLoading) CircularProgressIndicator(),
+                    child: const Text("Login")),
+                if (viewModel.state.isLoading)
+                  const CircularProgressIndicator(),
+                if (viewModel.state.errorText != null)
+                  Text(viewModel.state.errorText!)
               ],
-            )),
+            ),
           ),
         ),
       ),
