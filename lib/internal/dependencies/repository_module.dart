@@ -8,6 +8,7 @@ class RepositoryModule {
     return _apiRepository ??
         ApiDataRepository(
           ApiModule.auth(),
+          ApiModule.api(),
         );
   }
 }

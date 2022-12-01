@@ -1,19 +1,28 @@
+import 'dart:convert';
+
+import 'package:dd_study_22_ui/domain/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static const String _authKey = "_kAuthKey";
+  static const String _userKey = "_kUser";
 
-  static Future<bool> getStoredAuth() async {
+  static Future<User?> getStoredUser() async {
     var sp = await SharedPreferences.getInstance();
-    return sp.getBool(_authKey) ?? false;
+    var json = sp.getString(_userKey);
+    return (json == "" || json == null)
+        ? null
+        : User.fromJson(jsonDecode(json));
   }
 
-  static Future setStoredAuth(bool? auth) async {
+  static Future setStoredUser(User? user) async {
     var sp = await SharedPreferences.getInstance();
-    if (auth == null) {
-      sp.remove(_authKey);
+    if (user == null) {
+      sp.remove(_userKey);
     } else {
-      sp.setBool(_authKey, auth);
+      await sp.setString(
+        _userKey,
+        jsonEncode(user.toJson()),
+      );
     }
   }
 }
