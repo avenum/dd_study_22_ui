@@ -48,10 +48,10 @@ class ApiModule {
             }
           } catch (e) {
             var service = AuthService();
-            if (await service.checkAuth()) {
-              await service.logout();
-              AppNavigator.toLoader();
-            }
+            //if (await service.checkAuth()) {
+            await service.logout();
+            AppNavigator.toLoader();
+            //}
 
             return handler
                 .resolve(Response(statusCode: 400, requestOptions: options));
