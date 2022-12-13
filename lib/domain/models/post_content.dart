@@ -1,5 +1,6 @@
-import 'package:dd_study_22_ui/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:dd_study_22_ui/domain/db_model.dart';
 
 part 'post_content.g.dart';
 
@@ -10,13 +11,13 @@ class PostContent implements DbModel {
   final String name;
   final String mimeType;
   final String contentLink;
-  final String postId;
+  final String? postId;
   PostContent({
     required this.id,
     required this.name,
     required this.mimeType,
     required this.contentLink,
-    required this.postId,
+    this.postId,
   });
 
   factory PostContent.fromJson(Map<String, dynamic> json) =>
@@ -28,4 +29,20 @@ class PostContent implements DbModel {
       _$PostContentFromJson(map);
   @override
   Map<String, dynamic> toMap() => _$PostContentToJson(this);
+
+  PostContent copyWith({
+    String? id,
+    String? name,
+    String? mimeType,
+    String? contentLink,
+    String? postId,
+  }) {
+    return PostContent(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      mimeType: mimeType ?? this.mimeType,
+      contentLink: contentLink ?? this.contentLink,
+      postId: postId ?? this.postId,
+    );
+  }
 }

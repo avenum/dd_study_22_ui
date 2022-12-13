@@ -16,5 +16,6 @@ CREATE TABLE t_PostContent(
 	,[name]				TEXT
 	,mimeType			TEXT
 	,postId				TEXT
+	,contentLink		TEXT
 	,FOREIGN KEY(postId) REFERENCES t_Post(id)
 );
