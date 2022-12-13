@@ -1,7 +1,6 @@
 import 'package:dd_study_22_ui/domain/models/user.dart';
 import 'package:dd_study_22_ui/internal/config/app_config.dart';
 import 'package:dd_study_22_ui/internal/config/shared_prefs.dart';
-import 'package:dd_study_22_ui/internal/config/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +24,7 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, String>? headers;
-
   void asyncInit() async {
-    var token = await TokenStorage.getAccessToken();
-    headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
   }
 
@@ -45,25 +40,22 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
     return Scaffold(
-      appBar: AppBar(
-        leading: (viewModel.user != null && viewModel.headers != null)
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(
+        appBar: AppBar(
+          leading: (viewModel.user != null)
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(
                     "$baseUrl${viewModel.user!.avatarLink}",
-                    headers: viewModel.headers),
-              )
-            : null,
-        title: Text(viewModel.user == null ? "Hi" : viewModel.user!.name),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: viewModel._logout),
-        ],
-      ),
-      body: Container(
-        child: Column(children: []),
-      ),
-    );
+                  ),
+                )
+              : null,
+          title: Text(viewModel.user == null ? "Hi" : viewModel.user!.name),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.exit_to_app),
+                onPressed: viewModel._logout),
+          ],
+        ),
+        body: Container());
   }
 
   static create() {

@@ -56,6 +56,7 @@ class ApiModule {
             return handler
                 .resolve(Response(statusCode: 400, requestOptions: options));
           } finally {
+            // ignore: deprecated_member_use
             dio.unlock();
           }
 
