@@ -1,5 +1,5 @@
-import 'package:dd_study_22_ui/data/services/sync_service.dart';
-import 'package:dd_study_22_ui/domain/models/post.dart';
+//import 'package:dd_study_22_ui/data/services/sync_service.dart';
+//import 'package:dd_study_22_ui/domain/models/post.dart';
 import 'package:dd_study_22_ui/domain/models/post_model.dart';
 import 'package:dd_study_22_ui/domain/models/user.dart';
 import 'package:dd_study_22_ui/internal/config/app_config.dart';
@@ -33,7 +33,7 @@ class _ViewModel extends ChangeNotifier {
       if (percent > 80) {
         if (!isLoading) {
           isLoading = true;
-          Future.delayed(Duration(seconds: 1)).then((value) {
+          Future.delayed(const Duration(seconds: 1)).then((value) {
             posts = <PostModel>[...posts!, ...posts!];
             isLoading = false;
           });
@@ -66,7 +66,7 @@ class _ViewModel extends ChangeNotifier {
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
 
-    await SyncService().syncPosts();
+    //await SyncService().syncPosts();
     posts = await _dataService.getPosts();
   }
 
@@ -75,10 +75,10 @@ class _ViewModel extends ChangeNotifier {
   }
 
   void obclick() {
-    var offset = _lvc.offset;
+    //var offset = _lvc.offset;
 
     _lvc.animateTo(0,
-        duration: Duration(seconds: 1), curve: Curves.easeInCubic);
+        duration: const Duration(seconds: 1), curve: Curves.easeInCubic);
   }
 }
 
@@ -94,7 +94,7 @@ class App extends StatelessWidget {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: viewModel.obclick,
-          child: Icon(Icons.arrow_circle_up_outlined),
+          child: const Icon(Icons.arrow_circle_up_outlined),
         ),
         appBar: AppBar(
           leading: (viewModel.user != null)
@@ -104,7 +104,10 @@ class App extends StatelessWidget {
                   ),
                 )
               : null,
-          title: Text(viewModel.user == null ? "Hi" : viewModel.user!.name),
+          title: GestureDetector(
+              onTap: AppNavigator.toProfile,
+              child:
+                  Text(viewModel.user == null ? "Hi" : viewModel.user!.name)),
           actions: [
             IconButton(
                 icon: const Icon(Icons.exit_to_app),
