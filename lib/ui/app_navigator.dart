@@ -42,9 +42,6 @@ class AppNavigator {
         return PageRouteBuilder(pageBuilder: (_, __, ___) => Auth.create());
       case NavigationRoutes.app:
         return PageRouteBuilder(pageBuilder: (_, __, ___) => App.create());
-      case NavigationRoutes.profile:
-        return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => ProfileWidget.create());
     }
     return null;
   }

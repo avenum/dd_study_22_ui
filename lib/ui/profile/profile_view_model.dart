@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:dd_study_22_ui/internal/config/app_config.dart';
 import 'package:dd_study_22_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study_22_ui/ui/app_navigator.dart';
 import 'package:dd_study_22_ui/ui/common/cam_widget.dart';
+import 'package:dd_study_22_ui/ui/roots/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../domain/models/user.dart';
 import '../../internal/config/shared_prefs.dart';
@@ -41,6 +44,7 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future changePhoto() async {
+    var appmodel = context.read<AppViewModel>();
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
@@ -63,7 +67,9 @@ class ProfileViewModel extends ChangeNotifier {
         var img =
             await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
                 .load("$baseUrl${user!.avatarLink}?v=1");
-        avatar = Image.memory(img.buffer.asUint8List());
+        var avImage = Image.memory(img.buffer.asUint8List());
+        avatar = avImage;
+        appmodel.avatar = avImage;
       }
     }
   }

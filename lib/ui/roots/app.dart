@@ -4,14 +4,16 @@ import 'package:dd_study_22_ui/domain/models/post_model.dart';
 import 'package:dd_study_22_ui/domain/models/user.dart';
 import 'package:dd_study_22_ui/internal/config/app_config.dart';
 import 'package:dd_study_22_ui/internal/config/shared_prefs.dart';
+import 'package:dd_study_22_ui/ui/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
 import '../../data/services/data_service.dart';
 import '../app_navigator.dart';
 
-class _ViewModel extends ChangeNotifier {
+class AppViewModel extends ChangeNotifier {
   BuildContext context;
   final _authService = AuthService();
   final _dataService = DataService();
@@ -24,7 +26,7 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  _ViewModel({required this.context}) {
+  AppViewModel({required this.context}) {
     asyncInit();
     _lvc.addListener(() {
       var max = _lvc.position.maxScrollExtent;
@@ -49,6 +51,13 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Image? _avatar;
+  Image? get avatar => _avatar;
+  set avatar(Image? val) {
+    _avatar = val;
+    notifyListeners();
+  }
+
   List<PostModel>? _posts;
   List<PostModel>? get posts => _posts;
   set posts(List<PostModel>? val) {
@@ -65,6 +74,12 @@ class _ViewModel extends ChangeNotifier {
 
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
+    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+        .load("$baseUrl${user!.avatarLink}?v=1");
+    avatar = Image.memory(
+      img.buffer.asUint8List(),
+      fit: BoxFit.fill,
+    );
 
     //await SyncService().syncPosts();
     posts = await _dataService.getPosts();
@@ -80,6 +95,11 @@ class _ViewModel extends ChangeNotifier {
     _lvc.animateTo(0,
         duration: const Duration(seconds: 1), curve: Curves.easeInCubic);
   }
+
+  void toProfile(BuildContext bc) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (__) => ProfileWidget.create(bc)));
+  }
 }
 
 class App extends StatelessWidget {
@@ -87,7 +107,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var viewModel = context.watch<_ViewModel>();
+    var viewModel = context.watch<AppViewModel>();
     var size = MediaQuery.of(context).size;
     var itemCount = viewModel.posts?.length ?? 0;
 
@@ -97,15 +117,13 @@ class App extends StatelessWidget {
           child: const Icon(Icons.arrow_circle_up_outlined),
         ),
         appBar: AppBar(
-          leading: (viewModel.user != null)
+          leading: (viewModel.avatar != null)
               ? CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "$baseUrl${viewModel.user!.avatarLink}",
-                  ),
+                  backgroundImage: viewModel.avatar?.image,
                 )
               : null,
           title: GestureDetector(
-              onTap: AppNavigator.toProfile,
+              onTap: () => viewModel.toProfile(context),
               child:
                   Text(viewModel.user == null ? "Hi" : viewModel.user!.name)),
           actions: [
@@ -171,7 +189,7 @@ class App extends StatelessWidget {
 
   static create() {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => _ViewModel(context: context),
+      create: (BuildContext context) => AppViewModel(context: context),
       child: const App(),
     );
   }
