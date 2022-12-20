@@ -1,7 +1,7 @@
 import 'package:dd_study_22_ui/data/services/auth_service.dart';
 import 'package:dd_study_22_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study_22_ui/internal/config/token_storage.dart';
-import 'package:dd_study_22_ui/ui/app_navigator.dart';
+import 'package:dd_study_22_ui/ui/navigation/app_navigator.dart';
 import 'package:dio/dio.dart';
 
 import '../../data/clients/api_client.dart';

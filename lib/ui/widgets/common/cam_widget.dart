@@ -84,7 +84,7 @@ class CamWidgetState extends State<CamWidget> {
                   height: 60,
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    icon: Icon(Icons.camera),
+                    icon: const Icon(Icons.camera),
                     color: Colors.white,
                     iconSize: 54,
                     onPressed: () async {

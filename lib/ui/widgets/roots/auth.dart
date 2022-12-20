@@ -1,5 +1,5 @@
 import 'package:dd_study_22_ui/data/services/auth_service.dart';
-import 'package:dd_study_22_ui/ui/app_navigator.dart';
+import 'package:dd_study_22_ui/ui/navigation/app_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

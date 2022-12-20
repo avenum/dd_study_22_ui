@@ -1,14 +1,12 @@
-import 'package:dd_study_22_ui/ui/profile/profile_widget.dart';
-import 'package:dd_study_22_ui/ui/roots/app.dart';
-import 'package:dd_study_22_ui/ui/roots/auth.dart';
-import 'package:dd_study_22_ui/ui/roots/loader.dart';
+import 'package:dd_study_22_ui/ui/widgets/roots/app.dart';
+import 'package:dd_study_22_ui/ui/widgets/roots/auth.dart';
+import 'package:dd_study_22_ui/ui/widgets/roots/loader.dart';
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
   static const app = "/app";
-  static const profile = "/app/profile";
 }
 
 class AppNavigator {
@@ -22,10 +20,6 @@ class AppNavigator {
   static Future toAuth() async {
     return await key.currentState
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
-  }
-
-  static Future toProfile() async {
-    return await key.currentState?.pushNamed(NavigationRoutes.profile);
   }
 
   static Future toHome() async {
