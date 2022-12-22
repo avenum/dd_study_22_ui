@@ -1,3 +1,4 @@
+import 'package:dd_study_22_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study_22_ui/ui/navigation/tab_navigator.dart';
 import 'package:dd_study_22_ui/ui/widgets/common/bottom_tabs.dart';
 import 'package:flutter/material.dart';
@@ -16,21 +17,12 @@ class AppViewModel extends ChangeNotifier {
     asyncInit();
   }
 
-  final _navigationKeys = {
-    TabItemEnum.home: GlobalKey<NavigatorState>(),
-    TabItemEnum.search: GlobalKey<NavigatorState>(),
-    TabItemEnum.newPost: GlobalKey<NavigatorState>(),
-    TabItemEnum.favorites: GlobalKey<NavigatorState>(),
-    TabItemEnum.profile: GlobalKey<NavigatorState>(),
-  };
-
   var _currentTab = TabEnums.defTab;
   TabItemEnum? beforeTab;
   TabItemEnum get currentTab => _currentTab;
   void selectTab(TabItemEnum tabItemEnum) {
     if (tabItemEnum == _currentTab) {
-      _navigationKeys[tabItemEnum]!
-          .currentState!
+      AppNavigator.navigationKeys[tabItemEnum]!.currentState!
           .popUntil((route) => route.isFirst);
     } else {
       beforeTab = _currentTab;
@@ -43,6 +35,16 @@ class AppViewModel extends ChangeNotifier {
   User? get user => _user;
   set user(User? val) {
     _user = val;
+    notifyListeners();
+  }
+
+  String? _msg;
+  String? get msg => _msg;
+  set msg(String? val) {
+    _msg = val;
+    if (val != null) {
+      showSnackBar(val);
+    }
     notifyListeners();
   }
 
@@ -62,6 +64,11 @@ class AppViewModel extends ChangeNotifier {
       fit: BoxFit.fill,
     );
   }
+
+  showSnackBar(String text) {
+    var sb = SnackBar(content: Text(text));
+    ScaffoldMessenger.of(context).showSnackBar(sb);
+  }
 }
 
 class App extends StatelessWidget {
@@ -77,8 +84,8 @@ class App extends StatelessWidget {
       },
       child: WillPopScope(
           onWillPop: () async {
-            var isFirstRouteInCurrentTab = !await viewModel
-                ._navigationKeys[viewModel.currentTab]!.currentState!
+            var isFirstRouteInCurrentTab = !await AppNavigator
+                .navigationKeys[viewModel.currentTab]!.currentState!
                 .maybePop();
             if (isFirstRouteInCurrentTab) {
               if (viewModel.currentTab != TabEnums.defTab) {
@@ -114,7 +121,7 @@ class App extends StatelessWidget {
     return Offstage(
       offstage: viewModel.currentTab != tabItem,
       child: TabNavigator(
-        navigatorKey: viewModel._navigationKeys[tabItem]!,
+        navigatorKey: AppNavigator.navigationKeys[tabItem]!,
         tabItem: tabItem,
       ),
     );

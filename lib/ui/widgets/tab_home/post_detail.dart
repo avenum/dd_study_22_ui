@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../internal/utils.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
   final String? postId;
-  _ViewModel({required this.context, this.postId});
+  _ViewModel({required this.context, this.postId}) {
+    postId?.console();
+  }
 }
 
 class PostDetail extends StatelessWidget {
@@ -13,11 +16,7 @@ class PostDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
-    return Scaffold(
-        appBar: AppBar(),
-        body: Container(
-          child: Text(viewModel.postId ?? "empty"),
-        ));
+    return Scaffold(appBar: AppBar(), body: Text(viewModel.postId ?? "empty"));
   }
 
   static create(Object? arg) {
