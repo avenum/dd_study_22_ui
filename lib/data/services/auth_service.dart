@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:dd_study_22_ui/data/services/data_service.dart';
+import 'package:dd_study_22_ui/domain/models/push_token.dart';
 import 'package:dd_study_22_ui/domain/repository/api_repository.dart';
 import 'package:dd_study_22_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study_22_ui/internal/config/token_storage.dart';
 import 'package:dd_study_22_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study_22_ui/internal/utils.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthService {
   final ApiRepository _api = RepositoryModule.apiRepository();
@@ -39,7 +42,10 @@ class AuthService {
 
     if (await TokenStorage.getAccessToken() != null) {
       var user = await _api.getUser();
+
       if (user != null) {
+        var token = await FirebaseMessaging.instance.getToken();
+        if (token != null) await _api.subscribe(PushToken(token: token));
         await SharedPrefs.setStoredUser(user);
         await _dataService.cuUser(user);
       }
@@ -50,8 +56,17 @@ class AuthService {
     return res;
   }
 
-  Future logout() async {
+  Future cleanToken() async {
     await TokenStorage.setStoredToken(null);
+  }
+
+  Future logout() async {
+    try {
+      await _api.unsubscribe();
+    } on Exception catch (e, _) {
+      e.toString().console();
+    }
+    await cleanToken();
   }
 }
 

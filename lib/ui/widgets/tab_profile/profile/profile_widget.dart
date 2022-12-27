@@ -1,4 +1,3 @@
-import 'package:dd_study_22_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study_22_ui/ui/widgets/roots/app.dart';
 import 'package:dd_study_22_ui/ui/widgets/tab_profile/profile/profile_view_model.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class ProfileWidget extends StatelessWidget {
           onPressed: () {
             appViewModel.msg = "hi";
           },
-          child: Icon(Icons.message),
+          child: const Icon(Icons.message),
         ),
         body: SafeArea(
           child: Center(
@@ -49,6 +48,12 @@ class ProfileWidget extends StatelessWidget {
                           dtf.format(viewModel.user!.birthDate),
                           style: const TextStyle(fontSize: 20),
                         ),
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        TextButton(
+                            onPressed: viewModel.logout,
+                            child: const Text("exit"))
                       ]),
           ),
         ));

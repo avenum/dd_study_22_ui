@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dd_study_22_ui/data/services/auth_service.dart';
 import 'package:dd_study_22_ui/internal/config/app_config.dart';
 import 'package:dd_study_22_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study_22_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study_22_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study_22_ui/ui/widgets/roots/app.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import '../../../../internal/config/shared_prefs.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
+  final _authService = AuthService();
   final BuildContext context;
   ProfileViewModel({required this.context}) {
     asyncInit();
@@ -38,6 +41,11 @@ class ProfileViewModel extends ChangeNotifier {
   set avatar(Image? val) {
     _avatar = val;
     notifyListeners();
+  }
+
+  Future logout() async {
+    await _authService.logout();
+    AppNavigator.toLoader();
   }
 
   Future changePhoto() async {

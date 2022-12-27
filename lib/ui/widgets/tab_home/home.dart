@@ -7,7 +7,6 @@ import '../../../data/services/data_service.dart';
 import '../../../data/services/sync_service.dart';
 import '../../../domain/models/post_model.dart';
 import '../../../internal/config/app_config.dart';
-import '../roots/app.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;

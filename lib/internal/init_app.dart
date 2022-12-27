@@ -40,15 +40,15 @@ void catchMessage(RemoteMessage message) {
   "Got a message whilst in the foreground!".console();
   'Message data: ${message.data}'.console();
   if (message.notification != null) {
-    //showModal(message.notification!.title!, message.notification!.body!);
-    var post = '81b4293b-e874-4f2d-a6e0-c0135006c75e';
-    var ctx = AppNavigator.navigationKeys[TabItemEnum.home]?.currentContext;
-    if (ctx != null) {
-      var appviewModel = ctx.read<AppViewModel>();
-      Navigator.of(ctx)
-          .pushNamed(TabNavigatorRoutes.postDetails, arguments: post);
-      appviewModel.selectTab(TabItemEnum.home);
-    }
+    showModal(message.notification!.title!, message.notification!.body!);
+    // var post = '81b4293b-e874-4f2d-a6e0-c0135006c75e';
+    // var ctx = AppNavigator.navigationKeys[TabItemEnum.home]?.currentContext;
+    // if (ctx != null) {
+    //   var appviewModel = ctx.read<AppViewModel>();
+    //   Navigator.of(ctx)
+    //       .pushNamed(TabNavigatorRoutes.postDetails, arguments: post);
+    //   appviewModel.selectTab(TabItemEnum.home);
+    // }
   }
 }
 

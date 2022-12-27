@@ -49,7 +49,7 @@ class ApiModule {
           } catch (e) {
             var service = AuthService();
             //if (await service.checkAuth()) {
-            await service.logout();
+            await service.cleanToken();
             AppNavigator.toLoader();
             //}
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '../models/attach_meta.dart';
 import '../models/post_model.dart';
+import '../models/push_token.dart';
 import '../models/token_response.dart';
 import '../models/user.dart';
 
@@ -13,4 +14,6 @@ abstract class ApiRepository {
   Future<List<PostModel>> getPosts(int skip, int take);
   Future<List<AttachMeta>> uploadTemp({required List<File> files});
   Future addAvatarToUser(AttachMeta model);
+  Future subscribe(PushToken model);
+  Future unsubscribe();
 }
